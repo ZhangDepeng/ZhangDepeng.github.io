@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>???</title>
+  
+  <subtitle>???</subtitle>
+  <link href="/atom.xml" rel="self"/>
+  
+  <link href="http://yoursite.com/"/>
+  <updated>2020-05-01T15:11:44.883Z</updated>
+  <id>http://yoursite.com/</id>
+  
+  <author>
+    <name>CarpeDiem</name>
+    
+  </author>
+  
+  <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>my-first-blog</title>
+    <link href="http://yoursite.com/2020/05/01/my-first-blog/"/>
+    <id>http://yoursite.com/2020/05/01/my-first-blog/</id>
+    <published>2020-05-01T15:11:44.000Z</published>
+    <updated>2020-05-01T15:11:44.883Z</updated>
+    
+    <summary type="html">
+    
+    </summary>
+    
+    
+    
+  </entry>
+  
+</feed>
