@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2020-05-01T16:19:37.173Z</updated>
+  <updated>2020-05-02T12:02:23.207Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -21,13 +21,27 @@
     <link href="http://yoursite.com/2020/05/01/aboutme/"/>
     <id>http://yoursite.com/2020/05/01/aboutme/</id>
     <published>2020-05-01T15:11:44.000Z</published>
-    <updated>2020-05-01T16:19:37.173Z</updated>
+    <updated>2020-05-02T12:02:23.207Z</updated>
+    
+    <content type="html"><![CDATA[<blockquote><p>Pain is temporary,quitting lasts forever</p></blockquote><p>记得几年前就曾做了一个属于自己的博客，无奈当时没有坚持维护，如今正好有些时间，做了这个，将自己的读书，学习，生活记录于此。</p><p>希望这次我能长期维护这个博客，加油💪</p><p>要是偶然你们能够看到，希望所记录的东西能与你们分享，要是对你们有帮助那就更好了！</p>]]></content>
     
     <summary type="html">
+    
+      
+      
+        &lt;blockquote&gt;
+&lt;p&gt;Pain is temporary,quitting lasts forever&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;记得几年前就曾做了一个属于自己的博客，无奈当时没有坚持维护，如今正好有些时间，做了这个，将自己的读书，学习，生活记录于此。&lt;
+      
     
     </summary>
     
     
+      <category term="随笔" scheme="http://yoursite.com/categories/%E9%9A%8F%E7%AC%94/"/>
+    
+    
+      <category term="关于我" scheme="http://yoursite.com/tags/%E5%85%B3%E4%BA%8E%E6%88%91/"/>
     
   </entry>
   
