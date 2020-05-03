@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <meta name="keywords" content="hexo,个人博客,blog" />
+  <meta name="description" content="个人博客" />
+  <meta http-equiv="x-dns-prefetch-control" content="on">
+  <link rel="dns-prefetch" href="https://busuanzi.ibruce.info">
+  <link rel="dns-prefetch" href="https://at.alicdn.com">
+  
+  
+  
+  <link rel="stylesheet" type="text/css" href="/./style/main.css">
+	<link rel="shortcut icon" href="/img/favicon.ico" title="Favicon">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+	<title>nginx初体验</title>
+  
+  
+<meta name="generator" content="Hexo 4.2.0"><link rel="alternate" href="/atom.xml" title="ontheway" type="application/atom+xml">
+</head>
+<body>
+  <canvas id="pattern-placeholder" height="230"></canvas>
+<div class="navbar-header">
+  <a class="blog-title" href="/">ontheway</a>
+  <a class="face-img" href="/">
+    <img src="/img/logo.jpg">
+  </a>
+</div>
+<main>
+  <div class="article-title">
+    
+  
+  <h1 class="title">
+    nginx初体验
+  </h1>
+  
+
+
+    <ul class="article-info">
+      <li>
+        发布
+        <time datetime="2020-05-02T16:12:52.000Z" itemprop="datePublished">2020-05-03</time>
+      </li>
+      <li>
+        
+    更新 <time datetime="2020-05-02T16:12:52.000Z" itemprop="dateUpdated">2020-05-03</time>
+
+      </li>
+      <li id="busuanzi_container_page_pv">
+        阅读 <span id="busuanzi_value_page_pv"></span>
+      </li>
+    </ul>
+  </div>
+  <div class="container">
+    <div class="article">
+      <div class="content">
+        
+        <div class="overdue-remind">
+          本文最后更新于$day天前，文中所描述的信息可能已发生改变。
+        </div>
+        
+        <blockquote>
+<p>Pain is temporary,quitting lasts forever</p>
+</blockquote>
+<h4 id="1、什么是nginx"><a href="#1、什么是nginx" class="headerlink" title="1、什么是nginx?"></a>1、什么是nginx?</h4><p>众所周知，nginx是一个高性能的HTTP和反向代理服务器，它占有内存少，并发能力强，实现上注重效率，能够接收高负载的考验，受到很多用户的青睐。</p>
+<h4 id="2、什么是正向代理"><a href="#2、什么是正向代理" class="headerlink" title="2、什么是正向代理?"></a>2、什么是正向代理?</h4><p>说到反向代理，必须提一下正向代理。所谓正向代理，如果把本地网络外的网络(简称外网)想象成一个你要去的地方，假设本地网络中客户端要去外网，则需要通过代理服务器，这种代理服务就称为正向代理。</p>
+<p>这也就需要在客户端(比如:浏览器)，配置代理服务器，通过代理服务器进行网络访问(注意:正向代理代理的是客户端)。</p>
+<p>举个栗子:在现实网络中，我们是无法访问谷歌的，要想能够访问到，就需要某个东西代理访问(比如通过xxx.com网站)，但用户操作时是输入的<a href="http://www.google.com。" target="_blank" rel="noopener">www.google.com。</a></p>
+<pre class="mermaid">graph LR
+   客户端. --> www.xxx.com
+   www.xxx.com --> www.google.com
+   客户端 --> www.google.com</pre>
+<h4 id="3、什么是反向代理？"><a href="#3、什么是反向代理？" class="headerlink" title="3、什么是反向代理？"></a>3、什么是反向代理？</h4><p>说回反向代理，其实客户端对代理是无感知的，因为客户端不需要任何配置就可以访问，我们只需将请求发送给反向代理服务器(比如此处的nginx)，再由反向代理服务器去选择最终服务器，请求到数据后，再返回给客户端。而此时的反向代理服务器和目标服务器对外就是一个服务器，能够看到的是代理服务器地址，隐藏了真实服务器IP地址(反向代理代理的为服务器)</p>
+<pre class="mermaid">graph LR
+   客户端 --> 80反向代理服务器
+   80反向代理服务器 --> 8090目标服务器比如tomcat服务器
+   80反向代理服务器 --> 8091目标服务器比如tomcat服务器
+   80反向代理服务器 --> ...</pre>
+
+<h4 id="4、什么是负载均衡？"><a href="#4、什么是负载均衡？" class="headerlink" title="4、什么是负载均衡？"></a>4、什么是负载均衡？</h4><p>说nginx，必须要提<strong>负载均衡</strong>。</p>
+<p>客户端发送多个请求到服务器，服务器处理请求，有一些可能要与数据库进行交互，服务器处理完毕后，再将结果返回给客户端。这种处理逻辑没有任何问题，当并发请求较少时比较合适，节省资源。</p>
+<pre class="mermaid">graph LR
+   客户端 --> 服务端
+   服务端 --> 数据库
+   数据库 --> 服务端
+   服务端 --> 客户端</pre>
+
+<p>但这种请求会造成服务器响应客户端的请求日益缓慢，并发量大时，还容易造成服务器的崩溃，性能大打折扣。</p>
+<p>因此，单个服务器解决不了，我们就增加服务器的数量，然后将请求分发到各个服务器上，将原先请求集中到单个服务器上的情况改为将请求分发到多个服务器上，将负载分发到不同的服务器，也就是我们所说的<strong>负载均衡</strong>，如图所示：</p>
+<pre class="mermaid">graph LR
+   客户端 --> 80反向代理服务器
+   80反向代理服务器 --> 8090目标服务器比如tomcat服务器
+   80反向代理服务器 --> 8091目标服务器比如tomcat服务器
+   80反向代理服务器 --> ...</pre>
+
+<h4 id="5、什么是动静分离？"><a href="#5、什么是动静分离？" class="headerlink" title="5、什么是动静分离？"></a>5、什么是动静分离？</h4><p>传统的部署都是将静态文件和动态资源部署到服务器，如图所示：</p>
+<pre class="mermaid">graph LR
+   客户端-浏览器 --> 反向代理服务器
+   反向代理服务器 --> 服务器-将css.js等静态文件和servlet等动态资源部署到服务器</pre>
+
+<p>而现在在前后端分离的趋势下，动静分离显得格外重要，而且更加方便，哈哈哈，话不多说，上图：</p>
+<pre class="mermaid">graph LR
+   客户端-浏览器 --> 反向代理服务器
+   反向代理服务器 --> 服务器-将servlet等动态资源部署到服务器
+   反向代理服务器 --> 静态资源</pre>
+
+
+
+<h4 id="6、配置文件"><a href="#6、配置文件" class="headerlink" title="6、配置文件"></a>6、配置文件</h4><p>说了这么多，看看如何配置nginx吧！我们需要配置<em>nginx.conf</em>文件。</p>
+<p><strong>组成</strong></p>
+<p><em>nginx.conf</em>文件由三部分组成</p>
+<ul>
+<li><p>第一部分 全局块</p>
+<p>这部分主要设置一些影响nginx服务器整体运行的配置指令，主要包括配置运行Nginx服务器的用户(组)、允许生成的worker、<br>process数，进程PID存放路径、日志存放路径和类似以及配置文件的引入等。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">#user  nobody;</span><br><span class="line">#这是nginx服务器并发处理服务的关键配置，work_processes值越大，可以支持的并发处理量也越多，但是会受到硬件、软件等设备的制约。</span><br><span class="line">worker_processes  1;</span><br><span class="line">#error_log  logs&#x2F;error.log;</span><br><span class="line">#error_log  logs&#x2F;error.log  notice;</span><br><span class="line">#error_log  logs&#x2F;error.log  info;</span><br><span class="line">#pid        logs&#x2F;nginx.pid;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>第二部分 events块</p>
+<p>events块涉及的指令主要影响Nginx服务器与用户的网络连接，常用的设置，包括是否开启对多work process下的网络连接进行序列化，是否允许同时接收多个网络连接，选取哪种事件驱动模型来处理连接请求，每个work process可以同时支持的最大连接数等。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">#此默认示例表示每个work process支持的最大连接数为1024</span><br><span class="line">events &#123;</span><br><span class="line">    worker_connections  1024;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>第三部分 http块</p>
+<p>Nginx服务器配置中最频繁的部分，代理、缓存和日志定义等绝大多数功能和第三方模块配置都在这里，http全局块配置的指令包括文件引入、MIME-TYPE定义、日志自定义、连接超时时间、单链接请求数上限等。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">http &#123;</span><br><span class="line">include       mime.types;</span><br><span class="line">default_type  application&#x2F;octet-stream;</span><br><span class="line"></span><br><span class="line">#log_format  main  &#39;$remote_addr - $remote_user [$time_local] &quot;$request&quot; &#39;</span><br><span class="line">#                  &#39;$status $body_bytes_sent &quot;$http_referer&quot; &#39;</span><br><span class="line">#                  &#39;&quot;$http_user_agent&quot; &quot;$http_x_forwarded_for&quot;&#39;;</span><br><span class="line"></span><br><span class="line">#access_log  logs&#x2F;access.log  main;</span><br><span class="line"></span><br><span class="line">sendfile        on;</span><br><span class="line">#tcp_nopush     on;</span><br><span class="line"></span><br><span class="line">#keepalive_timeout  0;</span><br><span class="line">keepalive_timeout  65;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这块和虚拟主机有密切关系，虚拟主机从用户角度看，和一台独立的硬件主机是完全不一样的，该技术的产生是为了节省互联网服务器硬件成本。每个http块可以包括多个server块，而每个server块就相当于一个虚拟主机。而每个server块也分为全局server块，以及可以同时包含多个location块。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">#全局server块</span><br><span class="line">server &#123;</span><br><span class="line">    listen       80; #默认监听端口</span><br><span class="line">    server_name  localhost;</span><br><span class="line">	#charset koi8-r;</span><br><span class="line"></span><br><span class="line">	#access_log  logs&#x2F;host.access.log  main;</span><br><span class="line">	#location块</span><br><span class="line">	location &#x2F; &#123;</span><br><span class="line">   	 	root   html;</span><br><span class="line">    	index  index.html index.htm;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<p><strong>动静分离配置</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"># 上游服务器</span><br><span class="line">upstream group&#123;</span><br><span class="line">		#weight即权重，数值越大，优先级越高</span><br><span class="line">		server 127.0.0.1:8090 weight&#x3D;2;</span><br><span class="line">	&#125;</span><br><span class="line">group</span><br><span class="line">    server &#123;</span><br><span class="line">        listen       80;</span><br><span class="line">        server_name  localhost;</span><br><span class="line"></span><br><span class="line">        #charset koi8-r;</span><br><span class="line"></span><br><span class="line">        #access_log  logs&#x2F;host.access.log  main;</span><br><span class="line">		# 配置服务器</span><br><span class="line">		location &#x2F; &#123;</span><br><span class="line">		  proxy_pass http:&#x2F;&#x2F;group&#x2F;;</span><br><span class="line">		  tcp_nodelay     on;</span><br><span class="line">		  proxy_set_header Host            $host;</span><br><span class="line">          proxy_set_header X-Real-IP       $remote_addr;</span><br><span class="line">          proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;</span><br><span class="line">		&#125;</span><br><span class="line">		# 配置静态资源</span><br><span class="line">        location ~ .*\.(js|css|ico|png|jpg|eot|svg|ttf|woff|html|txt|pdf|gltf|) &#123;</span><br><span class="line">            root   html;</span><br><span class="line">            index  index.html index.htm;</span><br><span class="line">			expires 30d; #缓存30天</span><br><span class="line">        &#125;</span><br><span class="line">     &#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>配置负载均衡</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">#上游服务器</span><br><span class="line">upstream group&#123;</span><br><span class="line">#weight即权重，数值越大，优先级越高</span><br><span class="line">    server 192.168.0.12:80 weight&#x3D;1;</span><br><span class="line">    server 192.168.0.12:81 weight&#x3D;2;</span><br><span class="line">&#125;</span><br><span class="line">server &#123;</span><br><span class="line">    listen  80;</span><br><span class="line">    server_name localhost;</span><br><span class="line">    default_type  text&#x2F;html;</span><br><span class="line">    </span><br><span class="line">    location &#x2F;&#123;</span><br><span class="line">        echo &quot;hello&quot;;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    location &#x2F;a&#x2F; &#123;</span><br><span class="line">        proxy_pass http:&#x2F;&#x2F;group&#x2F;;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+      </div>
+        <div class="support-author">
+          <p>感谢您的阅读。 🙏
+          <a href="https://zhangdepeng.github.io/index.html" target="_blank">关于转载请看这里</a>
+            <!--<a class="btn-pay"  href="#pay-modal">¥ 打赏支持</a>-->
+          </p>
+        </div>
+        <!--
+            <div class="like ">
+              <div class="like-button">
+                <a id="like-note" href="">
+                  <i class="icon-heart"></i>喜欢
+                </a>
+              </div>
+              <span id="likes-count">256</span>
+            </div>
+        -->
+        <div class="otherLink">
+          <div class="previous">
+          </div>
+          <div class="next">
+          </div>
+        </div>
+        <div class="comments" id="comments">
+          
+
+        </div>
+      </div>
+    </div>
+   </div>
+</main>
+<div class="footer">
+  <div class="info">
+    <p>
+    <a href="https://hexo.io" target="_blank" rel="noopener"> Hexo </a> 强力驱动 |
+      <a href="https://github.com/Youthink/hexo-themes-yearn" target="_blank" rel="noopener"> Yearn </a>
+      主题
+    </p>
+    <p>&copy;2019-2020 Zhang&#39;s Blog</p>
+  </div>
+</div>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<script>//console
+  var consoleConfig = '\n欢迎访问 https://zhangdepeng.github.io,\n本博客使用 %cHexo%c 搭建，博客主题为小猿大圣开发的 %chexo-themes-yearn%c ~~~ 🎉🎉🎉 \n\n源码 https://github.com/Youthink/hexo-themes-yearn'.split(',');
+  var canConsole = true;
+  var consoleInfo = (function(consoleConfig) {
+  if (!canConsole || !consoleConfig || consoleConfig.length < 1) {
+    return;
+  }
+  var consoleColor = '#6190e8';
+  var _console;
+  var backgroundTextStyle = 'padding: 1px 5px;color: #fff;background: ' + consoleColor + ';'
+  var textStyle = 'color: ' + consoleColor + ';';
+
+  consoleConfig.map(o => {
+    var num = (o.match(/%c/g) || []).length;
+    if(/^http(s)?:\/\//.test(o)) {
+      console.log('%c     ', 'background: url(' + o + ') no-repeat left center;font-size: 180px;');
+      return;
+    }
+    if (num > 0) {
+      var logArguments = [];
+      for (var i = 0; i < num; i++) {
+        if (i % 2 === 0) {
+          logArguments.push(backgroundTextStyle);
+        } else {
+          logArguments.push(textStyle);
+        }
+      }
+      (_console = console).log.apply(_console, ['%c' + o, textStyle].concat(logArguments));
+      return;
+    }
+    console.log('%c' + o, textStyle);
+  });
+}(consoleConfig));</script><script type="text/javascript" src="/./js/main.js"></script>
+
+  <script src='https://unpkg.com/mermaid@7.1.2/dist/mermaid.min.js'></script>
+  <script>
+    if (window.mermaid) {
+      mermaid.initialize({theme: 'forest'});
+    }
+  </script>
+
+
+
+  <script src="//at.alicdn.com/t/font_159214_mvtxvg9me9.js"></script>
+</body>
+</html>
