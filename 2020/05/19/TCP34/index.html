@@ -67,7 +67,7 @@
 <h4 id="三次握手-three-way-handshake"><a href="#三次握手-three-way-handshake" class="headerlink" title="三次握手(three-way handshake)"></a>三次握手(three-way handshake)</h4><p><strong>意义</strong></p>
 <p>TCP位于传输层，作用就是提供可靠安全的字节流服务，为了准确无误地将数据传送到客户或服务器，TCP协议则采纳了三次握手策略。</p>
 <p><strong>过程</strong></p>
-<p><img src="/2020/05/19/tcp34/tcp3.png" alt="TCP三次握手"><span class="img-alt">TCP三次握手</span></p>
+<p><img src="/2020/05/19/TCP34/tcp3.png" alt="TCP三次握手"><span class="img-alt">TCP三次握手</span></p>
 <p>假设A为客户端，B为服务器端。</p>
 <ul>
 <li>首先B处于LISTEN(监听)状态，等待客户的连接请求。</li>
@@ -88,7 +88,7 @@
 <h4 id="四次挥手-four-way-wavehand"><a href="#四次挥手-four-way-wavehand" class="headerlink" title="四次挥手(four-way wavehand)"></a>四次挥手(four-way wavehand)</h4><p><strong>意义</strong></p>
 <p>客户端发送了FIN连接释放报文之后，服务器收到了这个报文，就进入了CLOSE-WAIT状态，这个状态是为了让服务器端发送还未还未传送完毕的数据，传送完毕后，服务器就会发送FIN连接释放报文。</p>
 <p><strong>过程</strong></p>
-<p><img src="/2020/05/19/tcp34/tcp4.png" alt="TCP四次挥手"><span class="img-alt">TCP四次挥手</span></p>
+<p><img src="/2020/05/19/TCP34/tcp4.png" alt="TCP四次挥手"><span class="img-alt">TCP四次挥手</span></p>
 <ul>
 <li>A发送连接释放报文，FIN=1.</li>
 <li>B收到之后发出确认，此时TCP属于半关闭状态，B能向A发送数据但是A不能向B发送数据。</li>
