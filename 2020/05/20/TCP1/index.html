@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <meta name="keywords" content="hexo,个人博客,blog" />
+  <meta name="description" content="个人博客" />
+  <meta http-equiv="x-dns-prefetch-control" content="on">
+  <link rel="dns-prefetch" href="https://busuanzi.ibruce.info">
+  <link rel="dns-prefetch" href="https://at.alicdn.com">
+  
+  
+  
+  <link rel="stylesheet" type="text/css" href="/./style/main.css">
+	<link rel="shortcut icon" href="/img/favicon.ico" title="Favicon">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+	<title>TCP之3次握手和4次挥手</title>
+  
+  
+<meta name="generator" content="Hexo 4.2.0"><link rel="alternate" href="/atom.xml" title="ontheway" type="application/atom+xml">
+</head>
+<body>
+  <canvas id="pattern-placeholder" height="230"></canvas>
+<div class="navbar-header">
+  <a class="blog-title" href="/">ontheway</a>
+  <a class="face-img" href="/">
+    <img src="/img/logo.jpg">
+  </a>
+</div>
+<main>
+  <div class="article-title">
+    
+  
+  <h1 class="title">
+    TCP之3次握手和4次挥手
+  </h1>
+  
+
+
+    <ul class="article-info">
+      <li>
+        发布
+        <time datetime="2020-05-20T03:22:15.000Z" itemprop="datePublished">2020-05-20</time>
+      </li>
+      <li>
+        
+    更新 <time datetime="2020-05-20T03:22:15.000Z" itemprop="dateUpdated">2020-05-20</time>
+
+      </li>
+      <li id="busuanzi_container_page_pv">
+        阅读 <span id="busuanzi_value_page_pv"></span>
+      </li>
+    </ul>
+  </div>
+  <div class="container">
+    <div class="article">
+      <div class="content">
+        
+        <div class="overdue-remind">
+          本文最后更新于$day天前，文中所描述的信息可能已发生改变。
+        </div>
+        
+        <blockquote>
+<p>Pain is temporary,quitting lasts forever</p>
+</blockquote>
+<h4 id="三次握手-three-way-handshake"><a href="#三次握手-three-way-handshake" class="headerlink" title="三次握手(three-way handshake)"></a>三次握手(three-way handshake)</h4><p><strong>意义</strong></p>
+<p>TCP位于传输层，作用就是提供可靠安全的字节流服务，为了准确无误地将数据传送到客户或服务器，TCP协议则采纳了三次握手策略。</p>
+<p><strong>过程</strong></p>
+<p><img src="/2020/05/20/TCP1/tcp3.png" alt="TCP三次握手"><span class="img-alt">TCP三次握手</span></p>
+<p>假设A为客户端，B为服务器端。</p>
+<ul>
+<li>首先B处于LISTEN(监听)状态，等待客户的连接请求。</li>
+<li>A向B发送连接请求报文，SYN(同步)=1,ACK(确认)=0,选择一个初始地序号x。</li>
+<li>B收到连接请求报文，如果同意建立连接，则向A发送连接确认报文，SYN=1，ACK=1，确认号为x+1，同时也选择一个初始的序号y。</li>
+<li>A收到B的连接确认报文后，还要向B发出确认，确认号为y+1,序号为x+1。</li>
+<li>B收到A的确认后，连接建立。</li>
+</ul>
+<p>形象化说法就是：</p>
+<ul>
+<li>Client:嗨，A，是我，听到没？</li>
+<li>Server:我听到了，你能听到我没？</li>
+<li>Client:好的，我们都能互相听到了，可以建立连接，通信了。</li>
+</ul>
+<p><strong>三次握手的原因</strong></p>
+<p>第三次握手是为了防止失效的连接请求到达服务器，让服务器错误打开连接。</p>
+<p>客户端发送地连接请求如果在网络中滞留，那么就会隔很长一段时间才能收到服务器端发回地连接确认。客户端等待一个超时重传时间之后，就会重新请求连接。但是这个滞留地连接请求最后还是会达到服务器，如果不进行三次握手，那么服务器就会打开两个连接。如果有三次握手，客户端就会忽略服务器之后发送地对滞留连接请求地连接确认，不进行第三次握手，因此就不会在此打开连接。</p>
+<h4 id="四次挥手-four-way-wavehand"><a href="#四次挥手-four-way-wavehand" class="headerlink" title="四次挥手(four-way wavehand)"></a>四次挥手(four-way wavehand)</h4><p><strong>意义</strong></p>
+<p>客户端发送了FIN连接释放报文之后，服务器收到了这个报文，就进入了CLOSE-WAIT状态，这个状态是为了让服务器端发送还未还未传送完毕的数据，传送完毕后，服务器就会发送FIN连接释放报文。</p>
+<p><strong>过程</strong></p>
+<p><img src="/2020/05/20/TCP1/tcp4.png" alt="TCP四次挥手"><span class="img-alt">TCP四次挥手</span></p>
+<ul>
+<li>A发送连接释放报文，FIN=1.</li>
+<li>B收到之后发出确认，此时TCP属于半关闭状态，B能向A发送数据但是A不能向B发送数据。</li>
+<li>当B不再需要连接时，发送连接释放报文，FIN=1。</li>
+<li>A收到后发出确认，进入TIME_WAIT状态，等待2MSL(最大报文存活时间)后释放连接。</li>
+<li>B收到A的确认后释放连接</li>
+</ul>
+<p>形象化说法就是：</p>
+<ul>
+<li>Client:我所有数据都传完了</li>
+<li>Server:我已经全部接收到了，但是等等我，我还没传完</li>
+<li>Server:好了，我也已经传完了</li>
+<li>Client:好的，那我们释放连接，通信结束。</li>
+</ul>
+<p><strong>TIME_WAIT</strong></p>
+<p>在客户端接收到服务端的FIN报文后进入此状态，此时并不是直接进入CLOSED状态，还需要等待一个时间计时器设置的时间2MSL(超过此时间则结束TCP连接)，这么做的理由为：</p>
+<ul>
+<li>确保最后一个确认报文能够到达。如果B没收到A发送的确认报文，那么就会重新发送连接释放请求报文，A等待一段时间就是为了处理这种情况的发生。</li>
+<li>等待一段时间是为了让本连接持续时间内所产生的所有报文都从网络中消失，使得下一个新的连接不会出现旧的连接请求报文。</li>
+</ul>
+<p><strong>常见问题</strong></p>
+<ul>
+<li><p>为什么连接的时候是三次握手，关闭的时候却是四次挥手？</p>
+<p>因为当Server端收到Client端的SYN连接请求报文后，可以直接发送SYN+ACK报文。其中ACK报文是用来确认的，SYN报文是用来同步的。但是关闭连接时，当Server端收到FIN报文时，很可能并不会立即关闭SOCKET，所以只能先回复一个ACK报文，告诉Client端，”你发的FIN报文我收到了”。只有等到我Server端所有的报文都发送完了，我才能发送FIN报文，因此不能一起发送。故需要四步挥手。</p>
+</li>
+<li><p>如果已经建立了连接，但是客户端突然出现故障了怎么办？</p>
+<p>TCP还设有一个保活计时器，显然，客户端如果出现故障，服务器不能一直等下去，白白浪费资源。服务器每收到一次客户端的请求后都会重新复位这个计时器，时间通常是设置为2小时，若两小时还没有收到客户端的任何数据，服务器就会发送一个探测报文段，以后每隔75秒钟发送一次。若一连发送10个探测报文仍然没反应，服务器就认为客户端出了故障，接着就关闭连接。</p>
+</li>
+</ul>
+
+      </div>
+        <div class="support-author">
+          <p>感谢您的阅读。 🙏
+          <a href="https://zhangdepeng.github.io/index.html" target="_blank">关于转载请看这里</a>
+            <!--<a class="btn-pay"  href="#pay-modal">¥ 打赏支持</a>-->
+          </p>
+        </div>
+        <!--
+            <div class="like ">
+              <div class="like-button">
+                <a id="like-note" href="">
+                  <i class="icon-heart"></i>喜欢
+                </a>
+              </div>
+              <span id="likes-count">256</span>
+            </div>
+        -->
+        <div class="otherLink">
+          <div class="previous">
+          </div>
+          <div class="next">
+          </div>
+        </div>
+        <div class="comments" id="comments">
+          
+
+        </div>
+      </div>
+    </div>
+   </div>
+</main>
+<div class="footer">
+  <div class="info">
+    <p>
+    <a href="https://hexo.io" target="_blank" rel="noopener"> Hexo </a> 强力驱动 |
+      <a href="https://github.com/Youthink/hexo-themes-yearn" target="_blank" rel="noopener"> Yearn </a>
+      主题
+    </p>
+    <p>&copy;2019-2020 Zhang&#39;s Blog</p>
+  </div>
+</div>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<script>//console
+  var consoleConfig = '\n欢迎访问www.zhangdp.top,\n本博客使用 %cHexo%c 搭建，博客主题为小猿大圣开发的 %chexo-themes-yearn%c ~~~ 🎉🎉🎉 \n\n源码 https://github.com/Youthink/hexo-themes-yearn'.split(',');
+  var canConsole = true;
+  var consoleInfo = (function(consoleConfig) {
+  if (!canConsole || !consoleConfig || consoleConfig.length < 1) {
+    return;
+  }
+  var consoleColor = '#6190e8';
+  var _console;
+  var backgroundTextStyle = 'padding: 1px 5px;color: #fff;background: ' + consoleColor + ';'
+  var textStyle = 'color: ' + consoleColor + ';';
+
+  consoleConfig.map(o => {
+    var num = (o.match(/%c/g) || []).length;
+    if(/^http(s)?:\/\//.test(o)) {
+      console.log('%c     ', 'background: url(' + o + ') no-repeat left center;font-size: 180px;');
+      return;
+    }
+    if (num > 0) {
+      var logArguments = [];
+      for (var i = 0; i < num; i++) {
+        if (i % 2 === 0) {
+          logArguments.push(backgroundTextStyle);
+        } else {
+          logArguments.push(textStyle);
+        }
+      }
+      (_console = console).log.apply(_console, ['%c' + o, textStyle].concat(logArguments));
+      return;
+    }
+    console.log('%c' + o, textStyle);
+  });
+}(consoleConfig));</script><script type="text/javascript" src="/./js/main.js"></script>
+
+  <script src='https://unpkg.com/mermaid@7.1.2/dist/mermaid.min.js'></script>
+  <script>
+    if (window.mermaid) {
+      mermaid.initialize({theme: 'forest'});
+    }
+  </script>
+
+
+
+  <script src="//at.alicdn.com/t/font_159214_mvtxvg9me9.js"></script>
+</body>
+</html>
