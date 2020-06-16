@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2020-05-20T03:44:35.000Z</updated>
+  <updated>2020-06-16T08:09:09.000Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -15,6 +15,36 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>fail-fast/safe迭代器区别</title>
+    <link href="http://yoursite.com/2020/06/16/fail-fast-safe/"/>
+    <id>http://yoursite.com/2020/06/16/fail-fast-safe/</id>
+    <published>2020-06-16T08:09:09.000Z</published>
+    <updated>2020-06-16T08:09:09.000Z</updated>
+    
+    <content type="html"><![CDATA[<blockquote><p>Pain is temporary,quitting lasts forever </p></blockquote><p>最近在看Java容器，在此记录下fail-fast和fail-safe两种迭代器的区别。</p><h4 id="1-fail-fast"><a href="#1-fail-fast" class="headerlink" title="1.fail-fast"></a>1.fail-fast</h4><p>fail-fast迭代器，如果直接在容器上进行遍历，在遍历过程中，一旦发现容器中的数据被修改了(比如增加、删除或者修改)，会立刻抛出ConcurrentModificationException异常导致遍历失败。</p><p>原因：在迭代的时候，先计算一个modCount变量，然后当执行hasNext()方法时，要判断modCount是否等于expectedModCount值，如果是，就返回遍历，否则就抛出异常，终止遍历。</p><p>注意：这里异常的抛出条件是检测到 modCount！=expectedmodCount 这个条件。如果集合发生变化时修改modCount值刚好又设置为了expectedmodCount值，则异常不会抛出。因此，不能依赖于这个异常是否抛出而进行并发操作的编程，这个异常只建议用于检测并发修改的bug。</p><p>场景：java.util包下的集合类(比如HashMap和ArrayList)都是fail-fast的，不能在多线程下发生并发修改。</p><h4 id="2-fail-safe"><a href="#2-fail-safe" class="headerlink" title="2.fail-safe"></a>2.fail-safe</h4><p>采用fail-safe迭代器机制的集合容器，在遍历时不是直接在集合内容上访问的，而是先复制原有的集合内容，在拷贝的集合上进行遍历。</p><p>原理：由于迭代时是对原集合的拷贝进行遍历，所以在遍历过程中对原集合所作的修改并不能被迭代器检测到，所以不会抛出异常。</p><p>缺点：基于对原集合的克隆虽避免了ConcurrentModificationException,但迭代器并不能访问到修改后的内容，所以不适用于实时性要求比较高的场景。</p><p>场景：java.util.concurrent包下的容器(比如ConcerrentHashMap和CopyOnWriteArrayList)都是fail-safe，可以在多线程下并发使用，并发修改。</p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;blockquote&gt;
+&lt;p&gt;Pain is temporary,quitting lasts forever &lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;最近在看Java容器，在此记录下fail-fast和fail-safe两种迭代器的区别。&lt;/p&gt;
+&lt;h4 id=&quot;1-fa
+      
+    
+    </summary>
+    
+    
+      <category term="编程" scheme="http://yoursite.com/categories/%E7%BC%96%E7%A8%8B/"/>
+    
+    
+      <category term="Java编程" scheme="http://yoursite.com/tags/Java%E7%BC%96%E7%A8%8B/"/>
+    
+  </entry>
   
   <entry>
     <title>Web页面的请求过程</title>
