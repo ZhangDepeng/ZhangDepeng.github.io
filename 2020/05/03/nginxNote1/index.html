@@ -45,7 +45,7 @@
       </li>
       <li>
         
-    更新 <time datetime="2020-05-02T16:12:52.000Z" itemprop="dateUpdated">2020-05-03</time>
+    更新 <time datetime="2020-05-05T16:12:52.000Z" itemprop="dateUpdated">2020-05-06</time>
 
       </li>
       <li id="busuanzi_container_page_pv">
@@ -132,9 +132,65 @@
 <p><strong>动静分离配置</strong></p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"># 上游服务器</span><br><span class="line">upstream group&#123;</span><br><span class="line">	#weight即权重，数值越大，优先级越高</span><br><span class="line">	server 127.0.0.1:8090 weight&#x3D;2;</span><br><span class="line">	&#125;</span><br><span class="line">server &#123;</span><br><span class="line">    listen       80;</span><br><span class="line">    server_name  localhost;</span><br><span class="line"></span><br><span class="line">    #charset koi8-r;</span><br><span class="line"></span><br><span class="line">    #access_log  logs&#x2F;host.access.log  main;</span><br><span class="line">	# 配置服务器</span><br><span class="line">	location &#x2F; &#123;</span><br><span class="line">		proxy_pass http:&#x2F;&#x2F;group&#x2F;;</span><br><span class="line">		tcp_nodelay     on;</span><br><span class="line">		proxy_set_header Host            $host;</span><br><span class="line">        proxy_set_header X-Real-IP       $remote_addr;</span><br><span class="line">        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;</span><br><span class="line">	&#125;</span><br><span class="line">	# 配置静态资源</span><br><span class="line">    location ~ .*\.(js|css|ico|png|jpg|eot|svg|ttf|woff|html|txt|pdf|gltf|) &#123;</span><br><span class="line">        root   html;</span><br><span class="line">        index  index.html index.htm;</span><br><span class="line">		expires 30d; #缓存30天</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
+<p><strong>注意</strong></p>
+<p>通过location指定不同的后缀名实现不同的请求转发。通过<strong>expires</strong>参数设置，可以使浏览器缓存过期时间，减少与服务器之前的请求和流量。具体Expires定义: 是给一个资源设定一个过期时间，也就是说无需去服务端验证，直接通过浏览器自身确认是否过期即可，所以不会产生额外的流量。此种方法非常<strong>适合不经常变动的资源</strong>。(如果经常更新的文件，不建议使用Expires来缓存)，如果设置30d, 表示在这30天之内访问这个URL, 发送一个请求，比对服务器该文件最后更新时间没有变化，则不会从服务器抓取，返回状态码304,如果有修改，则直接从服务器重新下载，返回状态码200。</p>
 <p><strong>配置负载均衡</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">#上游服务器</span><br><span class="line">upstream group&#123;</span><br><span class="line">#weight即权重，数值越大，优先级越高</span><br><span class="line">    server 192.168.0.12:80 weight&#x3D;1;</span><br><span class="line">    server 192.168.0.12:81 weight&#x3D;2;</span><br><span class="line">&#125;</span><br><span class="line">server &#123;</span><br><span class="line">    listen  80;</span><br><span class="line">    server_name localhost;</span><br><span class="line">    default_type  text&#x2F;html;</span><br><span class="line">    </span><br><span class="line">    location &#x2F;&#123;</span><br><span class="line">        echo &quot;hello&quot;;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    location &#x2F;a&#x2F; &#123;</span><br><span class="line">        proxy_pass http:&#x2F;&#x2F;group&#x2F;;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">#上游服务器</span><br><span class="line">upstream group&#123;</span><br><span class="line">#weight即权重，数值越大，优先级越高</span><br><span class="line">    server 192.168.0.12:80 weight&#x3D;1;</span><br><span class="line">    server 192.168.0.11:80 weight&#x3D;2;</span><br><span class="line">&#125;</span><br><span class="line">server &#123;</span><br><span class="line">    listen  80;</span><br><span class="line">    server_name localhost;</span><br><span class="line">    default_type  text&#x2F;html;</span><br><span class="line">    </span><br><span class="line">    location &#x2F;&#123;</span><br><span class="line">        echo &quot;hello&quot;;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    location &#x2F;a&#x2F; &#123;</span><br><span class="line">        proxy_pass http:&#x2F;&#x2F;group&#x2F;;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
+<p><strong>负载分配策略</strong></p>
+<ul>
+<li><p>1、轮询(默认)</p>
+<p>每个请求按时间顺序逐一分配到不 同的后端服务器，如果后端服务器down掉，能自动剔除</p>
+</li>
+<li><p>2、weight<br>weight代表权重默认为1,权重越高被分配的客户端越多。<br>指定轮询几率，weight和访问比率成正比，用于后端服务器性能不均的情况。例如: 。</p>
+</li>
+<li><p>3、ip hash</p>
+<p>每个请求按访问ip的hash结果分配, 这样每个访客固定访问一个后端服务器,可以解诀session的问题。例如:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">upstream server pool&#123;</span><br><span class="line">  ip_ hash</span><br><span class="line">  server 192.168.0.12:80</span><br><span class="line">  server 192.168.0.11:80</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>4、fair (第三方)<br>按后端服务器的响应时间来分配请求，响应时间短的优先分配</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">upstream server_pool </span><br><span class="line">	server 192.168.0.12:80;</span><br><span class="line">	server 192.168.0.11:80;</span><br><span class="line">	fair;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h4 id="7、Nginx原理浅谈"><a href="#7、Nginx原理浅谈" class="headerlink" title="7、Nginx原理浅谈"></a>7、Nginx原理浅谈</h4><p><strong>①master和worker</strong></p>
+<pre class="mermaid">graph TB
+   管理员--信号--> master进程
+   master进程--信号--> worker1进程
+   master进程 --信号--> worker2进程
+   master进程 --信号--> worker3进程
+   worker1进程 --连接--- Client1
+   worker1进程 --连接--- Client2
+   worker2进程 --连接--- Client3
+   worker2进程 --连接--- Client4
+   worker3进程 --连接--- Client5
+   worker3进程 --连接--- Client6</pre>
+
+<p><strong>②worker如何进行工作的</strong></p>
+<pre class="mermaid">graph LR
+client --> Master
+Master--管理-监控---worker1
+Master--管理-监控---worker2
+Master--管理-监控---worker3
+Master--管理-监控---worker4
+worker1--争抢-->client
+worker2--争抢-->client
+worker3--争抢-->client
+worker4--争抢-->client
+worker1--争抢到-获取-->Tomcat1</pre>
+
+<p>Master负责管理，监控并告知worker是否可以连接client，并请求连接服务器端。</p>
+<p><strong>③一个master和多个worker的好处</strong></p>
+<p>首先，对于每个worker进程来说，独立的进程，不需要加锁，所以省掉了锁带来的开销，同时在编程以及问题查找时，也会方便很多。其次,采用独立的进程，可以让互相之间不会影响，一个进程退出后，其它进程还在工作，服务不会中断，master进程则很快启动新的worker进程。当然，worker进程的异常退出，肯定是程序有bug了，异常退出，会导致当前worker.上的所有请求失败，不过不会影响到所有请求，所以降低了风险。</p>
+<p><strong>④设置多少个worker合适</strong></p>
+<p>Nginx同redis类似都采用了io多路复用机制，每个worker都是一个独立的进程， 但每个进程里只有一个主线程，通过异步非阻塞的方式来处理请求，即使是 千上万个请求也不在话下。每个worker的线程可以把一个cpu的性能发挥到极致。所以worker数和服务器的cpu数相等是最为适宜的。设少了会浪费cpu,设多了会造成cpu频繁切换上下文带来的损耗。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"># 设置worker数量</span><br><span class="line">worker.processes 4 </span><br><span class="line"></span><br><span class="line"># work绑定cpu(4work绑定4cpu)</span><br><span class="line">worker_cpu_affinity 0001 0010 0100 1000</span><br><span class="line"></span><br><span class="line"># work绑定cpu (4work绑定8cpu中的4个)</span><br><span class="line">worker_cpu_affinity 0000001 00000010 00000100 00001000</span><br></pre></td></tr></table></figure>
+
+<p><strong>⑤连接数worker_ connection</strong></p>
+<p>这个值是表示每个worker进程所能建立连接的最大值，所以，一个nginx 能建立的最大连接数，应该是worker.connections * worker processes。当然，这里说的是最大连接数，对于HTTP 请求本地资源来说，能够支持的最大并发数量是worker.connections * worker processes；如果是支持http1.1的浏览器每次访问要占两个连接，所以普通的静态访问最大并发数是: worker.connections * worker.processes / 2,；而如果是HTTP作为反向代理来说，最大并发数量应该是worker.connections * worker_proceses/4.。因为作为反向代理服务器，每个并发会建立与客户端的连接和与后端服务的连接，会占用两个连接。</p>
+<p><strong>举例</strong></p>
+<p>第一个: 发送请求，占用了woker的几个连接数?<br>答案: 2或者4个。</p>
+<p>第二个: nginx有一个master,有四个woker,每个woker支持最大的连接数1024,支持的最大并发数是多少?<br>答案：普通的静态访问最大并发数是: worker connections * worker processes /2，<br>而如果是HTTP作为反向代理来说，最大并发数量应该是worker connections * worker processes/4</p>
 
       </div>
         <div class="support-author">
