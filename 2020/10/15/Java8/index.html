@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <meta name="keywords" content="hexo,个人博客,blog" />
+  <meta name="description" content="个人博客" />
+  <meta http-equiv="x-dns-prefetch-control" content="on">
+  <link rel="dns-prefetch" href="https://busuanzi.ibruce.info">
+  <link rel="dns-prefetch" href="https://at.alicdn.com">
+  
+  
+  
+  <link rel="stylesheet" type="text/css" href="/./style/main.css">
+	<link rel="shortcut icon" href="/img/favicon.ico" title="Favicon">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+	<title>Java8新特性</title>
+  
+  
+<meta name="generator" content="Hexo 4.2.0"><link rel="alternate" href="/atom.xml" title="ontheway" type="application/atom+xml">
+</head>
+<body>
+  <canvas id="pattern-placeholder" height="230"></canvas>
+<div class="navbar-header">
+  <a class="blog-title" href="/">ontheway</a>
+  <a class="face-img" href="/">
+    <img src="/img/logo.jpg">
+  </a>
+</div>
+<main>
+  <div class="article-title">
+    
+  
+  <h1 class="title">
+    Java8新特性
+  </h1>
+  
+
+
+    <ul class="article-info">
+      <li>
+        发布
+        <time datetime="2020-10-15T03:33:01.000Z" itemprop="datePublished">2020-10-15</time>
+      </li>
+      <li>
+        
+    更新 <time datetime="2020-10-09T08:41:15.000Z" itemprop="dateUpdated">2020-10-09</time>
+
+      </li>
+      <li id="busuanzi_container_page_pv">
+        阅读 <span id="busuanzi_value_page_pv"></span>
+      </li>
+    </ul>
+  </div>
+  <div class="container">
+    <div class="article">
+      <div class="content">
+        
+        <div class="overdue-remind">
+          本文最后更新于$day天前，文中所描述的信息可能已发生改变。
+        </div>
+        
+        <blockquote>
+<p>Pain is temporary,quitting lasts forever </p>
+</blockquote>
+<h3 id="Java8-新特性"><a href="#Java8-新特性" class="headerlink" title="Java8    新特性"></a>Java8    新特性</h3><h4 id="特性"><a href="#特性" class="headerlink" title="特性"></a>特性</h4><ul>
+<li><p>Lambda表达式</p>
+<p>允许把函数作为一个方法的参数传递到方法中。</p>
+</li>
+<li><p>函数式接口</p>
+<p>有且仅有一个抽象方法，但是可以有多个非抽象方法的接口。</p>
+</li>
+<li><p>默认方法</p>
+<p>接口可以有实现方法，而且不需要实现类去实现其方法</p>
+</li>
+<li><p>方法引用</p>
+<p>可以直接引用已有的Java类或对象（实例）的方法或构造器</p>
+</li>
+<li><p>StreamAPI</p>
+<p>对集合（Collection）对象功能的增强</p>
+</li>
+<li><p>Date Time API   </p>
+<p>加强对日期与时间的处理</p>
+</li>
+<li><p>Optional类</p>
+<p>解决空指针异常</p>
+</li>
+</ul>
+<h4 id="Lambda表达式"><a href="#Lambda表达式" class="headerlink" title="Lambda表达式"></a>Lambda表达式</h4><p>Lambda表达式，也可称为闭包。允许把函数作为方法的参数传递到方法中。lambda由逗号分隔的参数列表、-&gt;符号、函数体三部分组成。</p>
+<p>语法：(parameters)-&gt;expression或(parameters)-&gt;{statements;}</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">PersonCallBack</span> </span>&#123;    <span class="function"><span class="keyword">void</span> <span class="title">callback</span><span class="params">()</span></span>;     &#125; <span class="comment">// 定义接口</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">test</span><span class="params">(String name, PersonCallBack callBack)</span> </span>&#123;    </span><br><span class="line">    System.out.println(name);    </span><br><span class="line">    callBack.callback();   </span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;    </span><br><span class="line">    <span class="keyword">new</span> Person().test(<span class="string">"张三"</span>, () -&gt; &#123;        </span><br><span class="line">        System.out.println(<span class="string">"18"</span>);    </span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>需要声明PersonCallBack接口为<strong>函数式接口</strong>。即接口中有且仅有唯一的一个抽象方法。lambda表达式其实就实现接口并且实现了接口中的唯一的方法。</p>
+<ul>
+<li>可选类型声明：不需要声明参数类型，编译器可以统一识别参数值。</li>
+<li>可选的参数圆括号：一个参数无需定义圆括号，但多个参数需要定义圆括号。</li>
+<li>可选的大括号：如果主体包含了一个语句，就不需要使用大括号</li>
+<li>可选的返回关键字：如果主体只有一个表达式返回值则编译器会自动返回值，使用大括号需要指定表达式返回一个数值。</li>
+</ul>
+<p>注意：lambda 表达式只能引用标记了 final 的外层局部变量，这就是说不能在 lambda 内部修改定义在域外的局部变量，否则会编译错误。</p>
+<h4 id="函数式接口"><a href="#函数式接口" class="headerlink" title="函数式接口"></a>函数式接口</h4><p>函数式接口(Functional Interface)就是一个有且仅有一个抽象方法，但是可以由多个非抽象方法的接口。@FunctionalInterface可以校验函数式接口。</p>
+<p>在Java8中新增了很多函数式接口。在java.util.function包下。使我们使用lambda接口更加方便。下面列举常用接口。</p>
+<table>
+<thead>
+<tr>
+<th align="center">接口</th>
+<th align="center">描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">Supplier</td>
+<td align="center">无参数，返回一个结果</td>
+</tr>
+<tr>
+<td align="center">Function</td>
+<td align="center">接受一个输入参数，返回一个结果</td>
+</tr>
+<tr>
+<td align="center">Consumer</td>
+<td align="center">接受一个输入参数，无返回结果</td>
+</tr>
+</tbody></table>
+<h4 id="默认方法和静态方法"><a href="#默认方法和静态方法" class="headerlink" title="默认方法和静态方法"></a>默认方法和静态方法</h4><p>接口中使用default修饰的方法为默认方法。用static修饰的方法为静态方法。</p>
+<p>默认方法和静态方法就是接口可以有实现方法，而且不需要实现类去实现其方法。实现类也可以实现方法进行重写。</p>
+<p><strong>为什么要有这个特性？</strong></p>
+<p>首先，之前的接口是个双刃剑，好处是面向抽象而不是面向具体编程，缺陷是，当需要修改接口时候，需要修改全部实现该接口的类，目前的 java 8 之前的集合框架没有 foreach 方法，通常能想到的解决办法是在JDK里给相关的接口添加新的方法及实现。然而，对于已经发布的版本，是没法在给接口添加新方法的同时不影响已有的实现。所以引进的默认方法。他们的目的是为了解决接口的修改与现有的实现不兼容的问题。</p>
+<h4 id="方法引用"><a href="#方法引用" class="headerlink" title="方法引用"></a>方法引用</h4><p>方法引用通过方法的名字来指向一个方法，方法引用使用一对冒号::。</p>
+<p>方法的参数列表必须与函数式接口的抽象方法的参数列表保持一致，返回值不做要求。</p>
+<table>
+<thead>
+<tr>
+<th align="center">引用类型</th>
+<th align="center">示例</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">引用静态方法</td>
+<td align="center">String::valueOf</td>
+</tr>
+<tr>
+<td align="center">引用某个对象的方法</td>
+<td align="center">list::add</td>
+</tr>
+<tr>
+<td align="center">引用某个类的方法</td>
+<td align="center">String::length</td>
+</tr>
+<tr>
+<td align="center">引用构造方法</td>
+<td align="center">HashMap::new</td>
+</tr>
+<tr>
+<td align="center">引用数组</td>
+<td align="center">int[]::new</td>
+</tr>
+</tbody></table>
+<h4 id="Optional非空判断"><a href="#Optional非空判断" class="headerlink" title="Optional非空判断"></a>Optional非空判断</h4><p>引入Optional避免NullPointerException和层层判空的操作，代码更简洁</p>
+<p>创建Optional对象的几个方法：</p>
+<ul>
+<li>Optional.of(T value)，返回一个Optional对象，value不能为空，否则会空指针异常</li>
+<li>Optional.ofNullable(T value)，返回一个Optional对象，value可以为空</li>
+<li>Optional.empty()，代表空</li>
+<li>isPresent() : 判断是否包含值</li>
+<li>orElse(T t) :  如果调用对象包含值，返回该值，否则返回t</li>
+<li>orElseGet(Supplier s) :如果调用对象包含值，返回该值，否则返回 s 获取的值</li>
+<li>map(Function f): 如果有值对其处理，并返回处理后的Optional，否则返回 Optional.empty()</li>
+<li>flatMap(Function mapper):与 map 类似，要求返回值必须是Optional</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 以前为了避免NPE，需要层层判空</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> String <span class="title">getColor</span><span class="params">(User user)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (user != <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (user.getCar() != <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">if</span> (user.getCar().getColor() != <span class="keyword">null</span>) &#123;</span><br><span class="line">                <span class="keyword">return</span> user.getCar().getColor();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">"red"</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 引入Optional后</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> String <span class="title">getColor</span><span class="params">(Optional&lt;User&gt; optUser)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> optUser.map(User::getCar)</span><br><span class="line">            .map(Car::getColor)</span><br><span class="line">            .orElse(<span class="string">"red"</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="Stream-API"><a href="#Stream-API" class="headerlink" title="Stream API"></a>Stream API</h4><p>Stream是对集合（Collection）对象功能的增强，它专注于对集合对象进行各种非常便利、高效的聚合操作，或者大批量数据操作。Stream API可以借助于新出现的Lambda表达式，极大的提高编程效率和程序的可读性。</p>
+<p><strong>stream构成</strong></p>
+<p>获取一个数据源（source）-&gt;数据转换-&gt;执行操作获取想要的结果，每次转换原有Stream对象不改变，返回一个新的Stream对象（可以有多次转换）。</p>
+<p><strong>stream的操作类型</strong></p>
+<ul>
+<li><p>中间操作</p>
+<p>一个流后面可以跟随0个或多个中间操作。其目的是打开流，做出某种程度的数据映射、过滤、然后返回一个新的流，交给下一个操作使用。这类操作都是懒惰的，仅仅调用到这类方法，并没有真正开始流的遍历。</p>
+</li>
+<li><p>终止操作</p>
+<p>一个流只能有一个终止操作，当这个操作执行后，流就被使 用“光”了，无法再被操作。终止操作的执行，才会真正开始流的遍历，并且会生成一个结果。</p>
+</li>
+</ul>
+<p><strong>stream的使用</strong></p>
+<ul>
+<li><p>获取stream流</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">Collection.stream(); </span><br><span class="line">Collection.parallelStream();</span><br><span class="line">Arrays.stream();</span><br><span class="line">stream.of(T t);</span><br><span class="line"></span><br><span class="line">List list = Arrays.asList(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>);</span><br><span class="line">Stream stream = list.stream();</span><br><span class="line">Stream stream = list.parallelStream();</span><br><span class="line">Integer[] nums = <span class="keyword">new</span> Integer[] &#123;<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>&#125;;</span><br><span class="line">Stream stream = Arrays.stream(nums);</span><br><span class="line">Stream stream = Stream.of(nums);</span><br><span class="line"></span><br><span class="line"><span class="comment">//对于基本数值型，目前提供了三种对应的包装类型 Stream</span></span><br><span class="line">IntStream,LongStream,DoubleStream</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<p><strong>Map/flatMap(映射)</strong></p>
+<p>  把 input Stream 的每一个元素，映射成 output Stream 的另外一个元素。map 生成的是个 1:1 映射。ﬂatMap是一对多映射关系的。  </p>
+  <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Collection&lt;Student&gt; students = Arrays.asList(        </span><br><span class="line">    <span class="keyword">new</span> Student(<span class="number">1</span>, Grade.FIRST, <span class="number">60</span>),        </span><br><span class="line">    <span class="keyword">new</span> Student(<span class="number">2</span>, Grade.SECOND, <span class="number">80</span>),        </span><br><span class="line">    <span class="keyword">new</span> Student(<span class="number">3</span>, Grade.FIRST, <span class="number">100</span>)</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<p>  <strong>map</strong></p>
+  <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">students.stream().map(Student::getScore).collect(Collectors.toList());</span><br></pre></td></tr></table></figure>
+
+<p>  可以获取到id数组 [60, 80, 100]</p>
+  <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">students.stream().map(item -&gt; item.getId() + <span class="string">" "</span> + item.getScore()).collect(Collectors.joining(<span class="string">","</span>));</span><br></pre></td></tr></table></figure>
+
+<p>  返回值为1 60,2 80,3 100</p>
+<p>  <strong>flatMap</strong></p>
+  <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Stream&lt;List&lt;Integer&gt;&gt; flatMapStream = Stream.of(        </span><br><span class="line">      Arrays.asList(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>),        </span><br><span class="line">      Arrays.asList(<span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>),        </span><br><span class="line">      Arrays.asList(<span class="number">7</span>, <span class="number">8</span>, <span class="number">9</span>, <span class="number">10</span>)</span><br><span class="line">  );</span><br></pre></td></tr></table></figure>
+
+<p>  先执行map，结果为3 3 4，为流内部list的长度</p>
+  <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">flatMapStream.map(List::size).forEach(item -&gt; System.out.print(item + <span class="string">" "</span>));</span><br></pre></td></tr></table></figure>
+
+<p>  在执行floatMap,结果为1 2 3 4 5 6 7 8 9 10</p>
+  <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">flatMapStream.flatMap(Collection::stream).forEach(item -&gt; System.out.print(item + <span class="string">" "</span>));</span><br></pre></td></tr></table></figure>
+
+<p>  <strong>Map是把Stream中的每个List当做管道中的元素。flatMap是把Stream中的每个List的子元素当做管道中的元素</strong></p>
+  <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">flatMapStream.map(List::size).forEach(item -&gt; System.out.print(item + <span class="string">" "</span>));</span><br><span class="line">  flatMapStream.flatMap(Collection::stream).forEach(item -&gt; System.out.print(item + <span class="string">" "</span>));</span><br></pre></td></tr></table></figure>
+
+<p>  当代码中同时出现对一个流的操作时，会出现什么问题？<br>  <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java.lang.IllegalStateException: stream has already been operated upon or closed</span><br></pre></td></tr></table></figure><br>  <strong>每次创建的stream只能使用一次</strong>  </p>
+<p>  <strong>Map、flatMap的区别</strong></p>
+  <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">map(Function&lt;? <span class="keyword">super</span> T, ? extends R&gt; mapper)</span><br><span class="line">flatMap(Function&lt;? <span class="keyword">super</span> T, ? extends Stream&lt;? extends R&gt;&gt; mapper); </span><br><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">Function</span>&lt;<span class="title">T</span>, <span class="title">R</span>&gt; </span>&#123;<span class="function">R <span class="title">apply</span><span class="params">(T t)</span></span>;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>  第一个参数是一样的，但是第二个不一样，flatMap要求返回的是继承stream类型的类型。也就是说函数体只能返回一个stream类型的流。</p>
+<p><strong>Reduce</strong></p>
+<p>  把 Stream 元素组合起来。它提供一个起始值，然后依照运算规则和Stream的每一个元素组合。从这个意义上说，字符串拼接、数值的 sum、min、max、average 都是特殊的 reduce。  </p>
+  <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Integer[] nums = <span class="keyword">new</span> Integer[]&#123;<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span>&#125;;</span><br><span class="line">Integer sum = Stream.of(nums).reduce(<span class="number">0</span>, (n1, n2) -&gt; n1 + n2);</span><br></pre></td></tr></table></figure>
+
+<p>  第一个为起始值，第二个为运算规则。没有起始值时返回的是Optional。需要get()获取。</p>
+<p><strong>filter(过滤)</strong></p>
+<p>  用于通过设置的条件过滤出元素。  </p>
+<p>  传递的是interface Predicate，返回值为boolean test(T t)，是否满足</p>
+  <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Integer[] nums = <span class="keyword">new</span> Integer[]&#123;<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span>&#125;;</span><br><span class="line">Stream.of(nums).filter(item -&gt; item &gt; <span class="number">3</span>).collect(Collectors.toList());</span><br></pre></td></tr></table></figure>
+
+<p>  返回值为[4, 5, 6]。</p>
+<p><strong>forEach（循环）终止操作</strong></p>
+<p>  迭代流中的每个数据。forEach是一个终止操作。无法对一个流进行两次终止操作  </p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Integer[] nums &#x3D; new Integer[]&#123;1,2,3,4,5,6&#125;;</span><br><span class="line">Stream.of(nums).filter(item -&gt; item &gt; 3).forEach(System.out::print);</span><br></pre></td></tr></table></figure>
+
+<p>  返回值为456  </p>
+  <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">forEach</span><span class="params">(Consumer&lt;? <span class="keyword">super</span> T&gt; action)</span></span>;</span><br></pre></td></tr></table></figure>
+
+<p>  返回值为void，不会返回流，终止操作</p>
+<p><strong>peek（循环）中间操作</strong></p>
+  <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Integer[] nums = <span class="keyword">new</span> Integer[]&#123;<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span>&#125;;</span><br><span class="line">Stream.of(nums).filter(item -&gt; item &gt; <span class="number">3</span>)        </span><br><span class="line">    .peek(item -&gt; System.out.print(item + <span class="number">1</span>))        </span><br><span class="line">    .peek(System.out::print)        </span><br><span class="line">    .reduce(<span class="number">0</span>, Integer::sum);</span><br></pre></td></tr></table></figure>
+
+<p>  可以多次peek操作。注意：结果为546576。 这个结果不好解释，自己体会吧。</p>
+<p>  第一次的peek操作修改数据不会对第二次的peek数据造成影响。因为peek传递的是Consumer类型的函数体，只能消费，不能返回</p>
+  <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">Stream&lt;T&gt; <span class="title">peek</span><span class="params">(Consumer&lt;? <span class="keyword">super</span> T&gt; action)</span></span>;</span><br></pre></td></tr></table></figure>
+
+<p>  会返回流</p>
+<p><strong>Limit/skip</strong></p>
+<p>  limit 返回 Stream 的前面 n 个元素；skip 则是跳过前 n 个元素  </p>
+  <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Integer[] nums = <span class="keyword">new</span> Integer[]&#123;<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span>&#125;;</span><br><span class="line">Stream.of(nums).limit(<span class="number">4</span>).skip(<span class="number">2</span>).forEach(System.out::print);</span><br></pre></td></tr></table></figure>
+
+<p>  去前四个元素并跳过前两个。返回值为34</p>
+<p><strong>sorted（排序）</strong></p>
+<p>  对 Stream 的排序通过 sorted 进行，它比数组的排序更强之处在于你可以首先对 Stream 进行各类 map、ﬁlter、 limit、skip 甚至 distinct 来减少元素数量后，再排序，这能帮助程序明显缩短执行时间  </p>
+  <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Integer[] nums = <span class="keyword">new</span> Integer[]&#123;<span class="number">4</span>,<span class="number">2</span>,<span class="number">2</span>,<span class="number">4</span>,<span class="number">3</span>,<span class="number">5</span>,<span class="number">6</span>&#125;;</span><br><span class="line">Stream.of(nums).sorted((x, y)-&gt;x.compareTo(y)).forEach(System.out::print);</span><br></pre></td></tr></table></figure>
+
+<p>  返回结果2234456</p>
+<p><strong>distinct（去重）/min/max</strong></p>
+  <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Integer[] nums = <span class="keyword">new</span> Integer[]&#123;<span class="number">4</span>,<span class="number">2</span>,<span class="number">2</span>,<span class="number">4</span>,<span class="number">3</span>,<span class="number">5</span>,<span class="number">6</span>&#125;;</span><br><span class="line">Stream.of(nums).distinct().forEach(System.out::print); <span class="comment">//42356</span></span><br><span class="line">System.out.println(Stream.of(nums).min(Comparator.naturalOrder()).get()); <span class="comment">// 2</span></span><br><span class="line">System.out.println(Stream.of(nums).max(Comparator.naturalOrder()).get()); <span class="comment">// 6</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>Match(匹配)</strong></p>
+<p>  Stream 有三个 match 方法，从语义上说：  </p>
+<ul>
+<li><p>allMatch：Stream 中全部元素符合传入的 predicate，返回 true  </p>
+</li>
+<li><p>anyMatch：Stream 中只要有一个元素符合传入的 predicate，返回 true  </p>
+</li>
+<li><p>noneMatch：Stream 中没有一个元素符合传入的 predicate，返回 true  </p>
+<p>Integer[] nums = new Integer[]{4,2,2,4,3,5,6}; System.out.println(Stream.of(nums).anyMatch(x -&gt; x&gt;5)); // true</p>
+</li>
+</ul>
+<p><strong>groupingBy/partitioningBy（分组）</strong></p>
+  <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Collection&lt;Student&gt; students = Arrays.asList(        </span><br><span class="line">    <span class="keyword">new</span> Student(<span class="number">1</span>, Grade.FIRST, <span class="number">60</span>),        </span><br><span class="line">    <span class="keyword">new</span> Student(<span class="number">2</span>, Grade.SECOND, <span class="number">80</span>),        </span><br><span class="line">    <span class="keyword">new</span> Student(<span class="number">3</span>, Grade.FIRST, <span class="number">100</span>)</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<p>  <strong>groupingBy</strong></p>
+<p>  对上面的Student进行按年级进行分组</p>
+  <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">students.stream().collect(Collectors.groupingBy(Student::getGrade))</span><br><span class="line">    .forEach((grade, list) -&gt;&#123;    </span><br><span class="line">        System.out.print(grade + <span class="string">" -&gt; "</span>);    </span><br><span class="line">        list.forEach(s-&gt; System.out.print(<span class="string">"&#123;"</span> + s.getId() + <span class="string">","</span> + s.getGrade() + <span class="string">","</span> + s.getScore() + <span class="string">"&#125;"</span>));    </span><br><span class="line">        System.out.println();</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>  返回值为 SECOND -&gt; {2,SECOND,80} FIRST -&gt; {1,FIRST,60}{3,FIRST,100}  </p>
+<p>  <strong>partitioningBy</strong></p>
+<p>  对上面的Student进行按成绩进行分组</p>
+  <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">students.stream().collect(Collectors.partitioningBy(student -&gt; student.getScore() &gt; <span class="number">60</span>))</span><br><span class="line">    .forEach((grade, list) -&gt;&#123;    </span><br><span class="line">        System.out.print(grade + <span class="string">" -&gt; "</span>);    </span><br><span class="line">        list.forEach(s-&gt; System.out.print(<span class="string">"&#123;"</span> + s.getId() + <span class="string">","</span> + s.getGrade() + <span class="string">","</span> + s.getScore() + <span class="string">"&#125;"</span>));    </span><br><span class="line">        System.out.println();</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>  返回值为 false -&gt; {1,FIRST,60} true -&gt; {2,SECOND,80}{3,FIRST,100}</p>
+<p><strong>parallelStream</strong></p>
+<p>  parallelStream其实就是一个并行执行的流.其底层使用Fork/Join框架实现，可以提高你的多线程任务的速度。  </p>
+<p>  可以通过parallel（）把stream转换为并行执行流。也可以通过parallelStream()获取。</p>
+  <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Integer[] nums = <span class="keyword">new</span> Integer[] &#123;<span class="number">1</span>, <span class="number">2</span>, <span class="number">6</span>,<span class="number">3</span>,<span class="number">2</span>,<span class="number">1</span>,<span class="number">4</span>,<span class="number">2</span>,<span class="number">5</span>&#125;;</span><br><span class="line">Arrays.stream(nums).forEach(System.out::print); <span class="comment">// 126321425</span></span><br><span class="line">System.out.println();</span><br><span class="line">Arrays.stream(nums).parallel().forEach(System.out::print); <span class="comment">// 122546321</span></span><br></pre></td></tr></table></figure>
+
+<p> 注意：</p>
+<p> 使用并行执行流可以提高多线程任务速度，但是也会改变数组的遍历顺序（仅从上面例子上发现）。</p>
+<p> parallelStream适合没有线程安全问题。</p>
+<p>parallelStream底层是使用的ForkJoin。而ForkJoin里面的线程是通过ForkJoinPool来运行的，Java 8为 ForkJoinPool添加了一个通用线程池，这个线程池用来处理那些没有被显式提交到任何线程池的任务。它是 ForkJoinPool类型上的一个静态元素。它拥有的默认线程数量等于运行计算机上的处理器数量，所以这里就出现 了这个java进程里所有使用parallelStream的地方实际上是公用的同一个ForkJoinPool。parallelStream提供了更 简单的并发执行的实现，但并不意味着更高的性能，它是使用要根据具体的应用场景。如果cpu资源紧张 parallelStream不会带来性能提升；如果存在频繁的线程切换反而会降低性能。  </p>
+<p><strong>Collect(流转换为其他数据结构)</strong></p>
+<p>  转换为list</p>
+  <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Stream&lt;String&gt; nums = Stream.of(<span class="keyword">new</span> String[]&#123;<span class="string">"1"</span>, <span class="string">"2"</span>, <span class="string">"3"</span>, <span class="string">"4"</span>, <span class="string">"5"</span>&#125;);</span><br><span class="line">List&lt;String&gt; list = nums.collect(Collectors.toList());</span><br></pre></td></tr></table></figure>
+<p>  也可以这样写</p>
+  <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">List&lt;String&gt; list = nums.collect(Collectors.toCollection(ArrayList::<span class="keyword">new</span>));</span><br></pre></td></tr></table></figure>
+
+<p>  转换为字符串</p>
+  <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">String str =nums.collect(Collectors.joining());</span><br></pre></td></tr></table></figure>
+
+<p> <strong>Stream API总结</strong></p>
+<ul>
+<li>stream不是数据结构，它没有内部存储，它只是用操作管道从source抓取数据 </li>
+<li>Stream的操作会产生一个新Stream，而不是从source修改后得到</li>
+<li>所有 Stream 的操作必须以 lambda 表达式为参数 </li>
+<li>惰性化，很多 Stream 操作是向后延迟的，一直到它弄清楚了最后需要多少数据才会开始，中间操作永远是惰性化的。</li>
+<li>当一个 Stream 是并行化的，就不需要再写多线程代码，所有对它的操作会自动并行进行的。</li>
+</ul>
+<h4 id="Date-Time-API"><a href="#Date-Time-API" class="headerlink" title="Date Time API"></a>Date Time API</h4><p>Java 8通过发布新的Date-Time API (JSR 310)来进一步加强对日期与时间的处理。</p>
+<p><strong>java8之前</strong></p>
+<ul>
+<li><strong>非线程安全</strong> java.util.Date 是非线程安全的，所有的日期类都是可变的</li>
+<li><strong>设计很差</strong> 日期/时间类的定义不一致，在java.util和java.sql的包中都有日期类。</li>
+<li><strong>时区处理麻烦</strong> 日期类并不提供国际化，没有时区支持</li>
+</ul>
+<p>新的java.time包涵盖了所有处理日期，时间，日期/时间，时区，时刻（instants），过程（during）与时钟（clock）的操作。</p>
+<p><strong>LocalDate类</strong></p>
+<p>LocalDate只持有ISO-8601格式且无时区信息的日期部分  </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">LocalDate now = LocalDate.now(); <span class="comment">// 2020-10-08</span></span><br><span class="line">now = now.plusDays(<span class="number">2</span>);  <span class="comment">// 2020-10-10</span></span><br><span class="line">now = now.plusMonths(<span class="number">1</span>); <span class="comment">// 2020-11-10</span></span><br><span class="line">now = now.minusMonths(<span class="number">1</span>); <span class="comment">// 2020-10-10</span></span><br><span class="line">now = now.minusDays(<span class="number">2</span>); <span class="comment">// 2020-10-08</span></span><br><span class="line">LocalDate date3 = LocalDate.of(<span class="number">2020</span>, Month.DECEMBER, <span class="number">12</span>); <span class="comment">// 2020-12-12</span></span><br></pre></td></tr></table></figure>
+
+<p>获取当前日期，对其进行修改</p>
+<p><strong>LocalTime类</strong></p>
+<p>LocalTime只持有ISO-8601格式且无时区信息的时间部分  </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">LocalTime now = LocalTime.now(); <span class="comment">// 22:10:54.613</span></span><br><span class="line">now = now.plusMinutes(<span class="number">12</span>); <span class="comment">// 22:22:54.613</span></span><br><span class="line">now = now.minusHours(<span class="number">2</span>); <span class="comment">// 20:22:54.613</span></span><br><span class="line">System.out.println(now.format(DateTimeFormatter.ofPattern(<span class="string">"HH:mm:ss"</span>))); <span class="comment">// 20:22:54</span></span><br><span class="line">LocalTime date4 = LocalTime.of(<span class="number">22</span>, <span class="number">15</span>, <span class="number">30</span>); <span class="comment">// 20:15:30</span></span><br><span class="line">LocalTime date5 = LocalTime.parse(<span class="string">"20:15:30"</span>); <span class="comment">// 20:15:30</span></span><br></pre></td></tr></table></figure>
+
+<p>获取当前时间，对其进行修改  </p>
+<p><strong>LocalDateTime类</strong></p>
+<p>LocaleDateTim把LocaleDat与LocalTime的功能合并起来  </p>
+<p><strong>ZonedDateTime类</strong></p>
+<p>从指定时区的系统时钟中获取当前日期时间。  </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ZonedDateTime now = ZonedDateTime.now(ZoneId.of(<span class="string">"America/Los_Angeles"</span>));</span><br><span class="line">System.out.println(now); <span class="comment">// 2020-10-08T07:13:54.754-07:00[America/Los_Angeles]</span></span><br></pre></td></tr></table></figure>
+
+<p>获取当前时区</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ZoneId currentZone = ZoneId.systemDefault();</span><br><span class="line">System.out.println(<span class="string">"当期时区: "</span> + currentZone); <span class="comment">// 当期时区: Asia/Shanghai</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>Clock类</strong></p>
+<p>它通过指定一个时区，然后就可以获取到当前的时刻，日期与时间  </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Clock shanghai = Clock.system(ZoneId.of(<span class="string">"Asia/Shanghai"</span>));</span><br><span class="line">System.out.println(LocalDateTime.now(shanghai)); <span class="comment">// 2020-10-08T22:15:39.999</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>Duration类</strong></p>
+<p>Duration计算两个日期差  </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">LocalDateTime start = LocalDateTime.parse(<span class="string">"2020-01-01 22:10:10"</span>, DateTimeFormatter.ofPattern(<span class="string">"yyyy-MM-dd HH:mm:ss"</span>));</span><br><span class="line">LocalDateTime end = LocalDateTime.parse(<span class="string">"2020-02-01 22:15:10"</span>, DateTimeFormatter.ofPattern(<span class="string">"yyyy-MM-dd HH:mm:ss"</span>));</span><br><span class="line">Duration duration = Duration.between(start, end);</span><br><span class="line">System.out.println(duration.toDays()); <span class="comment">// 31</span></span><br><span class="line">System.out.println(duration.toHours()); <span class="comment">// 744</span></span><br></pre></td></tr></table></figure>
+      </div>
+        <div class="support-author">
+          <p>感谢您的阅读。 🙏
+          <a href="https://zhangdepeng.github.io/index.html" target="_blank">关于转载请看这里</a>
+            <!--<a class="btn-pay"  href="#pay-modal">¥ 打赏支持</a>-->
+          </p>
+        </div>
+        <!--
+            <div class="like ">
+              <div class="like-button">
+                <a id="like-note" href="">
+                  <i class="icon-heart"></i>喜欢
+                </a>
+              </div>
+              <span id="likes-count">256</span>
+            </div>
+        -->
+        <div class="otherLink">
+          <div class="previous">
+          </div>
+          <div class="next">
+          </div>
+        </div>
+        <div class="comments" id="comments">
+          
+
+        </div>
+      </div>
+    </div>
+   </div>
+</main>
+<div class="footer">
+  <div class="info">
+    <p>
+    <a href="https://hexo.io" target="_blank" rel="noopener"> Hexo </a> 强力驱动 |
+      <a href="https://github.com/Youthink/hexo-themes-yearn" target="_blank" rel="noopener"> Yearn </a>
+      主题
+    </p>
+    <p>&copy;2019-2020 Zhang&#39;s Blog</p>
+  </div>
+</div>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<script>//console
+  var consoleConfig = '\n欢迎访问www.zhangdp.top,\n本博客使用 %cHexo%c 搭建，博客主题为小猿大圣开发的 %chexo-themes-yearn%c ~~~ 🎉🎉🎉 \n\n源码 https://github.com/Youthink/hexo-themes-yearn'.split(',');
+  var canConsole = true;
+  var consoleInfo = (function(consoleConfig) {
+  if (!canConsole || !consoleConfig || consoleConfig.length < 1) {
+    return;
+  }
+  var consoleColor = '#6190e8';
+  var _console;
+  var backgroundTextStyle = 'padding: 1px 5px;color: #fff;background: ' + consoleColor + ';'
+  var textStyle = 'color: ' + consoleColor + ';';
+
+  consoleConfig.map(o => {
+    var num = (o.match(/%c/g) || []).length;
+    if(/^http(s)?:\/\//.test(o)) {
+      console.log('%c     ', 'background: url(' + o + ') no-repeat left center;font-size: 180px;');
+      return;
+    }
+    if (num > 0) {
+      var logArguments = [];
+      for (var i = 0; i < num; i++) {
+        if (i % 2 === 0) {
+          logArguments.push(backgroundTextStyle);
+        } else {
+          logArguments.push(textStyle);
+        }
+      }
+      (_console = console).log.apply(_console, ['%c' + o, textStyle].concat(logArguments));
+      return;
+    }
+    console.log('%c' + o, textStyle);
+  });
+}(consoleConfig));</script><script type="text/javascript" src="/./js/main.js"></script>
+
+  <script src='https://unpkg.com/mermaid@7.1.2/dist/mermaid.min.js'></script>
+  <script>
+    if (window.mermaid) {
+      mermaid.initialize({theme: 'forest'});
+    }
+  </script>
+
+
+
+  <script src="//at.alicdn.com/t/font_159214_mvtxvg9me9.js"></script>
+</body>
+</html>
