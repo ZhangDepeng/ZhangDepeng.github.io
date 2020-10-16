@@ -73,7 +73,7 @@
 <p>5、明文传输不安全</p>
 <h4 id="二、HTTP2的优势"><a href="#二、HTTP2的优势" class="headerlink" title="二、HTTP2的优势"></a>二、HTTP2的优势</h4><p>1、二进制分帧层（Binary Framing Layer）</p>
 <p>帧是数据传输的最小单位，以二进制传输代替原本的明文传输，原本的报文消息被划分为更小的数据帧：</p>
-<p><img src="http2/http1.jpg" alt="http2"><span class="img-alt">http2</span></p>
+<p><img src="/http2/http1.jpg" alt="http2"><span class="img-alt">http2</span></p>
 <p>2、多路复用（MultiPlexing）</p>
 <p>在一个TCP连接上，我们可以向对方不断发送帧，每帧的stream identifier的标明这一帧属于哪个流，然后在对方接收时，根据stream identifier拼接每个流的所有帧组成一整块数据。把HTTP/1.1每个请求都当成一个流，那么多个请求变成多个流，请求响应数据分成多个帧，不同流中的帧交错地发送给对方，这就是HTTP/2中地多路复用。</p>
 <p>流的概念实现了单连接上多请求—相应并行，解决了线头阻塞的问题，减少了TCP连接数量和TCP连接慢启动造成的问题。</p>
@@ -92,16 +92,16 @@
 <ul>
 <li><p>伪头字段</p>
 <p>Header传输以二进制帧的方式进行，为了与HTTP1中的Header区分，这些以冒号开头的字段被称为“伪头字段”</p>
-<p><img src="http2/http2.jpg" alt="伪头字段"><span class="img-alt">伪头字段</span></p>
+<p><img src="/http2/http2.jpg" alt="伪头字段"><span class="img-alt">伪头字段</span></p>
 </li>
 <li><p>静态表</p>
 <p>静态表中定义了61个Header字段与Index，可以通过传输Index进而获取Header的字段与值，极大减少了报文大小。静态表中的字段和值固定，而且只是只读的。</p>
 <p>静态表部分值</p>
-<p><img src="http2/http3.jpg" alt="静态表"><span class="img-alt">静态表</span></p>
+<p><img src="/http2/http3.jpg" alt="静态表"><span class="img-alt">静态表</span></p>
 </li>
 <li><p>动态表</p>
 <p>动态表接在静态表之后，结构与静态表相同，可随时更新。下图中索引号62、63即为动态表字段。</p>
-<p><img src="http2/http4.jpg" alt="动态表"><span class="img-alt">动态表</span></p>
+<p><img src="/http2/http4.jpg" alt="动态表"><span class="img-alt">动态表</span></p>
 </li>
 </ul>
 <p>客户端通过传输索引号，服务端根据索引号在动态表中获取Header的key与value。另外，索引表中不存在的使用huffman编码，再更新到动态表中</p>
